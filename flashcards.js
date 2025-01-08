@@ -10,6 +10,30 @@ KI,き
 KU,く
 KE,け
 KO,こ
+
+SA,さ
+SHI,し
+SU,す
+SE,せ
+SO,そ
+
+TA,た
+CHI,ち
+TSU,つ
+TE,て
+TO,と
+
+NA,な
+NI,に
+NU,ぬ
+NE,ね
+NO,の
+
+HA,は
+HI,ひ
+FU,ふ
+HE,へ
+HO,ほ
 `;
 
 // transform deck string from CSV format to object storing indexed pairs of side A and B
