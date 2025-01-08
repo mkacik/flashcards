@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  font-size: 200px;
+  touch-action: none;
+}
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100svh;
+}
+
+.card {
+  border-radius: 25px;
+  border: 2px solid #000000;
+  flex-grow: 1;
+  align-self: stretch;
+  margin: 20px;
+  text-align: center;
+  align-content: center;
+}
