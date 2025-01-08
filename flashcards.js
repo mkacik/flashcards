@@ -43,6 +43,13 @@ function setUp() {
   let container = getContainer();
   container.innerHTML = '<img src="play.svg" alt="START" width="240" height="240">';
   container.onclick = newCard;
+
+  window.onkeydown = function(event){
+    if(event.keyCode === 32) {
+        event.preventDefault();
+        container.click();
+    }
+};
 }
 
 function getRandomInt(max) {
