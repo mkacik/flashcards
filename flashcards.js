@@ -37,7 +37,8 @@ HO,ほ
 `;
 
 // transform deck string from CSV format to object storing indexed pairs of side A and B
-function parseDeck(deckString) {
+// english pronunciation will always be first column
+function parseDeck(deckString, lettercase) {
   let deck = new Map();
   let rows = deckString.trim().split("\n");
 
@@ -45,7 +46,8 @@ function parseDeck(deckString) {
   for (row of rows) {
     sides = row.split(",");
     if (sides.length == 2) {
-      deck.set(index, [sides[0], sides[1]]);
+      let en = lettercase == "lowercase" ? sides[0].toLowerCase() : sides[0].toUpperCase();
+      deck.set(index, [en, sides[1]]);
       // only increment index on valid rows
       index += 1;
     }
@@ -58,9 +60,17 @@ function getContainer() {
   return document.getElementById("root");
 }
 
+function defaultSettings() {
+  return {
+    "lettercase": "lowercase",
+  }
+}
+
 function setUp() {
-  let deck =  parseDeck(DECK);
-  console.log(deck);
+  let settings = JSON.parse(window.localStorage.getItem("FLASHCARDS.settings")) ?? defaultSettings();
+
+  let deck =  parseDeck(DECK, settings.lettercase);
+
   window.FLASHCARDS = {}
   FLASHCARDS.deck = deck;
 
