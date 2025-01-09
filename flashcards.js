@@ -97,17 +97,16 @@ function getRandomCard() {
 
 function newCard() {
   let container = getContainer();
-  let card = getRandomCard();
+  let [sideA, sideB] = getRandomCard();
 
   // pick side to show first
-  let [sideA, sideB] = (getRandomInt(2) == 0) ? [card[0], card[1]] : [card[1], card[0]];
-  container.innerHTML = sideA;
+  container.innerHTML = (getRandomInt(2) == 0) ? sideA : sideB;
   container.onclick = function() { flipCard(sideA, sideB); };
 }
 
 function flipCard(sideA, sideB) {
   let container = getContainer();
-  container.innerHTML = sideA + "<br \>" + sideB;
+  container.innerHTML = sideB + "<br \>" + sideA;
   container.onclick = newCard;
 }
 
