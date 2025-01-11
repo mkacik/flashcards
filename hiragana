@@ -1,33 +1,34 @@
+# vowels
 A,あ
 I,い
 U,う
 E,え
 O,お
-
+# k-line
 KA,か
 KI,き
 KU,く
 KE,け
 KO,こ
-
+# s-line
 SA,さ
 SHI,し
 SU,す
 SE,せ
 SO,そ
-
+# t-line
 TA,た
 CHI,ち
 TSU,つ
 TE,て
 TO,と
-
+# n-line
 NA,な
 NI,に
 NU,ぬ
 NE,ね
 NO,の
-
+# h-line
 HA,は
 HI,ひ
 FU,ふ

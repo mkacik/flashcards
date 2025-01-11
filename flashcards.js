@@ -22,10 +22,13 @@ class Settings {
     let settings = JSON.parse(
       window.localStorage.getItem(Settings.LOCAL_STORAGE_KEY),
     );
-    this.settings = settings ?? {
+
+    const defaultSettings = {
       letterCase: Settings.LetterCase.LOWER,
       startingSide: Settings.StartingSide.RANDOM,
+      blockedGroups: [],
     };
+    this.settings = {...defaultSettings, ...settings};
   }
 
   get letterCase() {
@@ -34,6 +37,14 @@ class Settings {
 
   get startingSide() {
     return this.settings.startingSide;
+  }
+
+  get blockedGroups() {
+    return this.settings.blockedGroups;
+  }
+
+  wipe() {
+    window.localStorage.removeItem(Settings.LOCAL_STORAGE_KEY);
   }
 
   save() {
@@ -46,13 +57,19 @@ class Settings {
   parseFormAndSave(form) {
     this.settings.letterCase = form.letterCase.value;
     this.settings.startingSide = form.startingSide.value;
+ 
+   // Blocked groups represent inverse of selection, so I need to filter selected values out
+    let selectedGroups = Array.from(form.groups.selectedOptions).map((item) => item.value);
+    let allGroups = Array.from(form.groups.options).map((item) => item.value)
+    this.settings.blockedGroups = allGroups
+      .filter((item) => !selectedGroups.includes(item))
+      .map((item) => Number(item));
+
     this.save();
     window.location.search = "";
   }
 
-  generateSelect(
-    name, labelText, options, selected
-  ) {
+  generateSelect(name, labelText, selectedValue, options) {
     let label = document.createElement("label");
     label.setAttribute("for", name);
     label.innerHTML = labelText;
@@ -65,8 +82,8 @@ class Settings {
       let option = document.createElement("option");
       option.setAttribute("value", value);
       option.innerHTML = value;
-      if (selected == value) {
-        option.setAttribute("selected", "true");
+      if (selectedValue == value) {
+        option.setAttribute("selected", true);
       }
       select.appendChild(option);
     }
@@ -79,7 +96,36 @@ class Settings {
     return span;
   }
 
-  generateForm() {
+  generateDeckSelect(name, labelText, selectedValues, deckGroups) {
+    let label = document.createElement("label");
+    label.setAttribute("for", name);
+    label.innerHTML = labelText;
+
+    let select = document.createElement("select");
+    select.setAttribute("id", name);
+    select.setAttribute("name", name);
+    select.setAttribute("multiple", true);
+
+    for (let [value, label] of deckGroups) {
+      let option = document.createElement("option");
+      option.setAttribute("value", value);
+      option.innerHTML = label;
+
+      if (!selectedValues.includes(value)) {
+        option.setAttribute("selected", true);
+      }
+      select.appendChild(option);
+    }
+
+    let span = document.createElement("span");
+    span.setAttribute("class", "settings-item");
+    span.appendChild(label);
+    span.appendChild(select);
+
+    return span;
+  }
+
+  generateForm(deck) {
     let settings = this.settings;
 
     let form = document.createElement("form");
@@ -92,29 +138,48 @@ class Settings {
     let letterCaseSelect = this.generateSelect(
       "letterCase", 
       "Letter case for english characters",
-      Settings.LetterCase,
       settings.letterCase,
+      Settings.LetterCase,
     );
 
     let startingSideSelect = this.generateSelect(
       "startingSide",
       "Card side to show first",
-      Settings.StartingSide,
       settings.startingSide,
+      Settings.StartingSide,
+    );
+
+    let groupsSelect = this.generateDeckSelect(
+      "groups",
+      "Groups to include in session",
+      settings.blockedGroups,
+      deck.groups
     );
 
     let settingsFooter = document.createElement("span");
     settingsFooter.setAttribute("class", "settings-footer");
 
+    let resetButton = document.createElement("button");
+    resetButton.innerHTML = "reset to default";
+    resetButton.addEventListener("click",
+      (e) => {
+        e.preventDefault();
+        this.wipe();
+        window.location.search = "";
+      }
+    );
+
     let submitButton = document.createElement("button");
     submitButton.setAttribute("type", "submit");
     submitButton.innerHTML = "save";
 
+    settingsFooter.appendChild(resetButton);
     settingsFooter.appendChild(submitButton);
 
     form.appendChild(settingsHeader);
     form.appendChild(letterCaseSelect);
     form.appendChild(startingSideSelect);
+    form.appendChild(groupsSelect);
     form.appendChild(settingsFooter);
 
     form.addEventListener("submit", (e) => {
@@ -128,25 +193,45 @@ class Settings {
 
 class Deck {
   constructor(deckString, settings) {
-    let deck = new Map();
-    let rows = deckString.trim().split("\n");
+    let cards = new Map();
+    let groups = new Map();
 
+    var current_group = null;
+    var current_group_members = [];
     var index = 0;
+
     // transform deck string from CSV format to object storing indexed pairs of side A and B
     // indexing prevents clashes caused by potential same pronunciation
+    let rows = deckString.trim().split("\n");
     for (let row of rows) {
+      if (row.startsWith("#")) {
+        if (current_group == null) {
+          current_group = 0;
+        } else {
+          groups.set(current_group, current_group_members);
+          current_group += 1;
+          current_group_members = [];
+        }
+        continue;
+      }
+
       let sides = row.split(",");
       if (sides.length == 2) {
+        current_group_members.push(row);
+  
         // english pronunciation is expected in first column
         let en =
           settings.letterCase == Settings.LetterCase.LOWER
             ? sides[0].toLowerCase()
             : sides[0].toUpperCase();
-        deck.set(index, [en, sides[1]]);
-        // only increment index on valid rows
+
+        if (!settings.blockedGroups.includes(current_group)) {
+          cards.set(index, [en, sides[1]]);
+        }
         index += 1;
       }
     }
+    groups.set(current_group, current_group_members);
 
     const getCoinTossFunction = () => {
       switch (settings.startingSide) {
@@ -160,7 +245,8 @@ class Deck {
       }
     };
 
-    this.cards = deck;
+    this.cards = cards;
+    this.groups = groups;
     this.coinTossForPickSide = getCoinTossFunction();
   }
 
@@ -217,8 +303,8 @@ function flipCard(sideB) {
   };
 }
 
-function setUpSettingsPage(settings) {
-  let form = settings.generateForm();
+function setUpSettingsPage(settings, deck) {
+  let form = settings.generateForm(deck);
   let container = getContainer();
   container.innerHTML = "";
   container.appendChild(form);
@@ -231,16 +317,16 @@ function requestedSettingsPage() {
 async function setUp() {
   let settings = new Settings();
 
-  if (requestedSettingsPage()) {
-    setUpSettingsPage(settings);
-  } else {
-    fetch("hiragana")
-      .then((response) => response.text())
-      .then((text) => {
-        let deck = new Deck(text, settings);
+  fetch("hiragana")
+    .then((response) => response.text())
+    .then((text) => {
+      let deck = new Deck(text, settings);
+      if (requestedSettingsPage()) {
+        setUpSettingsPage(settings, deck);
+      } else {
         setUpFlashcardsPage(settings, deck)
-      });
-  }
+      }
+    });
 }
 
 document.addEventListener("DOMContentLoaded", setUp);
