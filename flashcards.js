@@ -1,41 +1,3 @@
-const DECK = `
-A,あ
-I,い
-U,う
-E,え
-O,お
-
-KA,か
-KI,き
-KU,く
-KE,け
-KO,こ
-
-SA,さ
-SHI,し
-SU,す
-SE,せ
-SO,そ
-
-TA,た
-CHI,ち
-TSU,つ
-TE,て
-TO,と
-
-NA,な
-NI,に
-NU,ぬ
-NE,ね
-NO,の
-
-HA,は
-HI,ひ
-FU,ふ
-HE,へ
-HO,ほ
-`;
-
 class Settings {
   static get LOCAL_STORAGE_KEY() {
     return "FLASHCARDS.settings";
@@ -255,8 +217,6 @@ function flipCard(sideB) {
   };
 }
 
-/* GLOBAL SETTINGS */
-
 function setUpSettingsPage(settings) {
   let form = settings.generateForm();
   let container = getContainer();
@@ -268,14 +228,18 @@ function requestedSettingsPage() {
   return window.location.search.endsWith("settings");
 }
 
-function setUp() {
+async function setUp() {
   let settings = new Settings();
-  let deck = new Deck(DECK, settings);
 
   if (requestedSettingsPage()) {
     setUpSettingsPage(settings);
   } else {
-    setUpFlashcardsPage(settings, deck);
+    fetch("hiragana")
+      .then((response) => response.text())
+      .then((text) => {
+        let deck = new Deck(text, settings);
+        setUpFlashcardsPage(settings, deck)
+      });
   }
 }
 
