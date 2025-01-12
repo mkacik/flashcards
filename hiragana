@@ -34,3 +34,24 @@ HI,ひ
 FU,ふ
 HE,へ
 HO,ほ
+# m-line
+MA,ま
+MI,み,
+MU,む
+ME,め
+MO,も
+# y-line
+YA,や
+YU,ゆ
+YO,よ
+# r-line
+RA,ら
+RI,り
+RU,る
+RE,れ
+RO,ろ
+# w-line
+WA,わ
+WO/O,を
+# n
+N,ん
