@@ -1,4 +1,10 @@
+@font-face {
+  font-family: 'NotoSansJP';
+  src: url('NotoSansJP.ttf');
+}
+
 body {
+  font-family: NotoSansJP;
   margin: 0;
   font-size: 200px;
   touch-action: none;
@@ -29,11 +35,9 @@ body {
 }
 
 .settings-item {
-  font-family: serif;
 }
 
 .settings-footer {
-  text-align: right;
   margin-top: 20px;
 }
 
@@ -44,7 +48,6 @@ body {
 
 select, button {
   font-size: 35px;
-  font-family: serif;
 }
 
 label {

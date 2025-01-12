@@ -117,12 +117,19 @@ class Settings {
       select.appendChild(option);
     }
 
-    let span = document.createElement("span");
-    span.setAttribute("class", "settings-item");
-    span.appendChild(label);
-    span.appendChild(select);
+    let labelSpan = document.createElement("span");
+    labelSpan.setAttribute("class", "settings-item");
+    labelSpan.appendChild(label);
 
-    return span;
+    let selectSpan = document.createElement("span");
+    selectSpan.setAttribute("class", "settings-item");
+    selectSpan.appendChild(select);
+
+    let div = document.createElement("div");
+    div.appendChild(labelSpan);
+    div.appendChild(selectSpan);
+
+    return div;
   }
 
   generateForm(deck) {
@@ -174,6 +181,7 @@ class Settings {
     submitButton.innerHTML = "save";
 
     settingsFooter.appendChild(resetButton);
+    settingsFooter.appendChild(document.createTextNode(" "));
     settingsFooter.appendChild(submitButton);
 
     form.appendChild(settingsHeader);
