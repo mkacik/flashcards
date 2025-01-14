@@ -19,6 +19,10 @@ class Settings {
   }
 
   constructor() {
+    this.load();
+  }
+
+  load() {
     let settings = JSON.parse(
       window.localStorage.getItem(Settings.LOCAL_STORAGE_KEY),
     );
@@ -66,6 +70,8 @@ class Settings {
       .map((item) => Number(item));
 
     this.save();
+    this.load();
+    setMode(Mode.Cards);
     window.location.search = "";
   }
 
@@ -178,7 +184,7 @@ class Settings {
 
     let submitButton = document.createElement("button");
     submitButton.setAttribute("type", "submit");
-    submitButton.innerHTML = "save";
+    submitButton.innerHTML = "save and start";
 
     settingsFooter.appendChild(resetButton);
     settingsFooter.appendChild(document.createTextNode(" "));
@@ -279,9 +285,8 @@ function setUpFlashcardsPage(settings, deck) {
   window.FLASHCARDS = {};
   FLASHCARDS.deck = deck;
 
-  let container = getContainer();
-  container.innerHTML = "ひらがな";
-  container.onclick = () => {
+  getContentContainer().innerHTML = "ひらがな";
+  getContainer().onclick = () => {
     newCard();
   };
 
@@ -293,12 +298,25 @@ function setUpFlashcardsPage(settings, deck) {
   };
 }
 
+const Mode = Object.freeze({
+  Cards: "mode-cards",
+  Settings: "mode-settings",
+});
+function setMode(mode) {
+  const classes = document.body.classList;
+  classes.toggle(Mode.Cards, mode === Mode.Cards);
+  classes.toggle(Mode.Settings, mode === Mode.Settings);
+}
+
+function getContentContainer() {
+  return document.getElementById('card-content');
+}
+
 function newCard() {
   let [sideA, sideB] = FLASHCARDS.deck.getRandomCard();
 
-  let container = getContainer();
-  container.innerHTML = sideA;
-  container.onclick = () => {
+  getContentContainer().innerHTML = sideA;
+  getContainer().onclick = () => {
     flipCard(sideB);
   };
   if (document.getElementById('scratchpad-autoclear').checked) {
@@ -307,8 +325,8 @@ function newCard() {
 }
 
 function flipCard(sideB) {
+  getContentContainer().innerHTML = sideB;
   let container = getContainer();
-  container.innerHTML = sideB;
   container.onclick = () => {
     newCard();
   };
@@ -369,8 +387,7 @@ document.getElementById('scratchpad-clear').addEventListener('click', clearCanva
 
 function setUpSettingsPage(settings, deck) {
   let form = settings.generateForm(deck);
-  let container = getContainer();
-  container.innerHTML = "";
+  let container = document.getElementById('settings-root');
   container.appendChild(form);
 }
 
@@ -378,19 +395,28 @@ function requestedSettingsPage() {
   return window.location.search.endsWith("settings");
 }
 
-async function setUp() {
+function openSettingsPage(e) {
+  setMode(Mode.Settings);
+  e.preventDefault();
+  window.location.search = 'settings';
+}
+
+function setUp() {
   let settings = new Settings();
 
   fetch("hiragana")
     .then((response) => response.text())
     .then((text) => {
       let deck = new Deck(text, settings);
+      setUpSettingsPage(settings, deck);
+      setUpFlashcardsPage(settings, deck)
       if (requestedSettingsPage()) {
-        setUpSettingsPage(settings, deck);
+        setMode(Mode.Settings);
       } else {
-        setUpFlashcardsPage(settings, deck)
+        setMode(Mode.Cards);
       }
     });
+  document.getElementById('settings-button').addEventListener('click', openSettingsPage);
 }
 
 document.addEventListener("DOMContentLoaded", setUp);
