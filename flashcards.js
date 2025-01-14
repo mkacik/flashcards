@@ -301,6 +301,9 @@ function newCard() {
   container.onclick = () => {
     flipCard(sideB);
   };
+  if (document.getElementById('scratchpad-autoclear').checked) {
+    clearCanvas();
+  }
 }
 
 function flipCard(sideB) {
@@ -310,6 +313,59 @@ function flipCard(sideB) {
     newCard();
   };
 }
+
+const stroke = [];
+
+function drawOnCanvas() {
+  const i = stroke.length - 1;
+  const canvas = document.getElementById('scratchpad');
+  const ctx = canvas.getContext('2d', { desynchronized: true});
+  ctx.strokeStyle = '#000000';
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  if (stroke.length < 3) {
+    const it = stroke.at(i);
+    ctx.lineWidth = it.pressure * 2;
+    ctx.beginPath();
+    ctx.moveTo(it.x, it.y);
+    ctx.stroke();
+    return;
+  }
+
+  const cpx = (stroke[i].x + stroke[i - 1].x) / 2;
+  const cpy = (stroke[i].y + stroke[i - 1].y) / 2;
+  ctx.lineWidth = stroke[i - 1].pressure * 10;
+  ctx.quadraticCurveTo(stroke[i - 1].x, stroke[i - 1].y, cpx, cpy);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cpx, cpy);
+}
+
+function onCanvasPointerMove(e) {
+  e.stopPropagation()
+  if (e.pressure === 0) {
+    stroke.length = 0;
+    return;
+  }
+  let canvas = document.getElementById('scratchpad');
+  let w = canvas.parentElement.offsetWidth;
+  let h = canvas.parentElement.offsetHeight;
+  if (canvas.width !== w || canvas.height !== h) {
+    canvas.width = w;
+    canvas.height = h;
+  }
+  stroke.push({ x: e.offsetX, y: e.offsetY, pressure: e.pressure});
+  drawOnCanvas();
+}
+
+function clearCanvas() {
+  const canvas = document.getElementById('scratchpad');
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+}
+
+document.getElementById('scratchpad').addEventListener('pointermove', onCanvasPointerMove);
+document.getElementById('scratchpad').addEventListener('pointerleave', () => { stroke.length = 0; });
+document.getElementById('scratchpad-clear').addEventListener('click', clearCanvas);
 
 function setUpSettingsPage(settings, deck) {
   let form = settings.generateForm(deck);
