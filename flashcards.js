@@ -88,7 +88,7 @@ class Settings {
       let option = document.createElement("option");
       option.setAttribute("value", value);
       option.innerHTML = value;
-      if (selectedValue == value) {
+      if (selectedValue === value) {
         option.setAttribute("selected", true);
       }
       select.appendChild(option);
@@ -230,12 +230,12 @@ class Deck {
       }
 
       let sides = row.split(",");
-      if (sides.length == 2) {
+      if (sides.length === 2) {
         current_group_members.push(row);
   
         // english pronunciation is expected in first column
         let en =
-          settings.letterCase == Settings.LetterCase.LOWER
+          settings.letterCase === Settings.LetterCase.LOWER
             ? sides[0].toLowerCase()
             : sides[0].toUpperCase();
 
@@ -255,7 +255,7 @@ class Deck {
           return () => false;
         case Settings.StartingSide.RANDOM:
         default:
-          return () => Math.floor(Math.random() * 2) == 0;
+          return () => Math.floor(Math.random() * 2) === 0;
       }
     };
 
