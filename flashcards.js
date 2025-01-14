@@ -397,7 +397,19 @@ function openSettingsPage(e) {
   window.location.search = 'settings';
 }
 
+function disableSafariTouchSelection() {
+  const killItWithFire = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+  const scratchpad = document.getElementById('scratchpad');
+  for (const e of ['touchstart', 'touchmove', 'touchend', 'touchcancel']) {
+    scratchpad.addEventListener(e, killItWithFire, {passive: false});
+  }
+}
+
 async function setUp() {
+  disableSafariTouchSelection();
   document.getElementById('settings-button').addEventListener('click', openSettingsPage);
   document.getElementById('scratchpad').addEventListener('pointermove', onCanvasPointerMove);
   document.getElementById('scratchpad').addEventListener('pointerleave', () => { stroke.length = 0; });
