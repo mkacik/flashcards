@@ -269,10 +269,11 @@ class Deck {
   }
 
   getRandomCard() {
-    let randomIndex = this.getRandomInt(this.cards.size);
-    let [english, kana] = this.cards.get(randomIndex);
-    let sideA = this.coinTossForPickSide() ? english : kana;
-    let sideB = `${kana}<br />${english}`;
+    const randomIndex = this.getRandomInt(this.cards.size);
+    const randomKey = Array.from(this.cards.keys()).at(randomIndex);
+    const [english, kana] = this.cards.get(randomKey);
+    const sideA = this.coinTossForPickSide() ? english : kana;
+    const sideB = `${kana}<br />${english}`;
     return [sideA, sideB];
   }
 }
