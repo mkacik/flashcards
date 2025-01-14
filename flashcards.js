@@ -397,26 +397,24 @@ function openSettingsPage(e) {
   window.location.search = 'settings';
 }
 
-function setUp() {
-  let settings = new Settings();
-
-  fetch("hiragana")
-    .then((response) => response.text())
-    .then((text) => {
-      let deck = new Deck(text, settings);
-      setUpSettingsPage(settings, deck);
-      setUpFlashcardsPage(settings, deck)
-      if (requestedSettingsPage()) {
-        setMode(Mode.Settings);
-      } else {
-        setMode(Mode.Cards);
-      }
-    });
-
+async function setUp() {
   document.getElementById('settings-button').addEventListener('click', openSettingsPage);
   document.getElementById('scratchpad').addEventListener('pointermove', onCanvasPointerMove);
   document.getElementById('scratchpad').addEventListener('pointerleave', () => { stroke.length = 0; });
   document.getElementById('scratchpad-clear').addEventListener('click', clearCanvas);
+
+  let settings = new Settings();
+
+  const response = await fetch("hiragana");
+  const text = await response.text();
+  let deck = new Deck(text, settings);
+  setUpSettingsPage(settings, deck);
+  setUpFlashcardsPage(settings, deck)
+  if (requestedSettingsPage()) {
+    setMode(Mode.Settings);
+  } else {
+    setMode(Mode.Cards);
+  }
 
 }
 
