@@ -381,10 +381,6 @@ function clearCanvas() {
   canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 }
 
-document.getElementById('scratchpad').addEventListener('pointermove', onCanvasPointerMove);
-document.getElementById('scratchpad').addEventListener('pointerleave', () => { stroke.length = 0; });
-document.getElementById('scratchpad-clear').addEventListener('click', clearCanvas);
-
 function setUpSettingsPage(settings, deck) {
   let form = settings.generateForm(deck);
   let container = document.getElementById('settings-root');
@@ -416,7 +412,12 @@ function setUp() {
         setMode(Mode.Cards);
       }
     });
+
   document.getElementById('settings-button').addEventListener('click', openSettingsPage);
+  document.getElementById('scratchpad').addEventListener('pointermove', onCanvasPointerMove);
+  document.getElementById('scratchpad').addEventListener('pointerleave', () => { stroke.length = 0; });
+  document.getElementById('scratchpad-clear').addEventListener('click', clearCanvas);
+
 }
 
 document.addEventListener("DOMContentLoaded", setUp);
