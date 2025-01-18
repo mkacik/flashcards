@@ -428,7 +428,7 @@ async function setUp() {
   } else {
     setMode(Mode.Cards);
   }
-
 }
 
 document.addEventListener("DOMContentLoaded", setUp);
+
