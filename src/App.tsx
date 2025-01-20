@@ -1,22 +1,62 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { CardSide, Settings, SettingsPage } from "./Settings"
 
-enum Page {
-  Cards,
-  Settings,
-}
+import { parseDeck, Deck } from "./Deck";
+import { loadSettings, saveSettings, Settings, SettingsView } from "./Settings";
+import { TrainingSession, TrainingSessionView } from "./TrainingSession";
+
 
 function App() {
-  let [page, setPage] = useState<Page>(Page.Cards);
+  let [settings, setSettings] = useState<Settings>(loadSettings);
+  let [deck, setDeck] = useState<Deck | null>(null);
+  let [trainingSession, setTrainingSession] = useState<TrainingSession | null>(null)
 
-  let settings: Settings = {
-    frontSide: CardSide.RANDOM,
-    blockedGroups: [],
-  } as Settings;
+  useEffect(() => {
+    if (deck === null) {
+      fetch("hiragana.txt")
+        .then((response) => response.text())
+        .then((text) => {
+          const deck = parseDeck(text);
+          setDeck(deck);
+        });
+    }
+  }, [deck, setDeck]);
 
-  return <SettingsPage settings={settings} />
+  const updateSettings = (settings: Settings): void => {
+    saveSettings(settings);
+    setSettings(settings);
+  };
+
+  const endTrainingSession = (): void => {
+    setTrainingSession(null);
+  };
+
+  const startTrainingSession = (): void => {
+    if (deck === null) {
+      console.log("Something fucky happened with setting up deck and it's not set. Fix it.")
+      return;
+    }
+    const newTrainingSession = new TrainingSession(deck, settings)
+    setTrainingSession(newTrainingSession);
+  };
+
+  const contents = trainingSession === null ? (
+      <>
+        <SettingsView
+          settings={settings}
+          updateSettingsHandler={updateSettings}
+        />
+        {(deck !== null) ? <button onClick={startTrainingSession}>GO!</button> : null}
+      </>
+    ) : (
+      <TrainingSessionView
+        trainingSession={trainingSession}
+        endTrainingSessionHandler={endTrainingSession}
+      />
+    );
+
+  return <>{contents}</>;
 }
 
 const domContainer = document.querySelector("#root")!;

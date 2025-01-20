@@ -1,0 +1,57 @@
+# VOWELS
+a,あ
+i,い
+u,う
+e,え
+o,お
+# K-LINE
+ka,か
+ki,き
+ku,く
+ke,け
+ko,こ
+# S-LINE
+sa,さ
+shi,し
+su,す
+se,せ
+so,そ
+# T-LINE
+ta,た
+chi,ち
+tsu,つ
+te,て
+to,と
+# N-LINE
+na,な
+ni,に
+nu,ぬ
+ne,ね
+no,の
+# H-LINE
+ha,は
+hi,ひ
+fu,ふ
+he,へ
+ho,ほ
+# M-LINE
+ma,ま
+mi,み,
+mu,む
+me,め
+mo,も
+# Y-LINE
+ya,や
+yu,ゆ
+yo,よ
+# R-LINE
+ra,ら
+ri,り
+ru,る
+re,れ
+ro,ろ
+# W-LINE
+wa,わ
+wo/o,を
+# N
+n,ん
