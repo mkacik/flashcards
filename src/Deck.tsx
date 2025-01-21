@@ -1,7 +1,7 @@
 export type CardID = number;
 
 export type Card = {
-  id: CardID,
+  id: CardID;
   english: string;
   kana: string;
 };

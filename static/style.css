@@ -4,9 +4,11 @@
 }
 
 body {
-  font-family: NotoSansJP;
   margin: 0;
-  font-size: 200px;
+  font-family: NotoSansJP;
+  font-size: 40px;
+
+  /* text selection triggers too eagerly, so disable it */
   touch-action: none;
   user-select: none;
 }
@@ -22,114 +24,97 @@ body {
 .card {
   border-radius: 25px;
   border: 2px solid #000000;
+  margin: 30px;
+  /* stretch horizontally */
   flex-grow: 1;
+  /* stretch vertically */
   align-self: stretch;
-  margin: 20px;
+
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr auto;
+}
+
+
+/* stretch across whole container to make large area clickable */
+.card-content {
+  grid-row: 1 / span 2;
+  grid-column: 1 / span 2;
+
+  font-size: 200px;
   text-align: center;
   align-content: center;
 }
 
-#root {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  grid-template-columns: 1fr auto;
-  #settings-button {
-    grid-row: 1;
-    grid-column: 2;
-    font-size: 50%;
-  }
-  #card-content {
-    grid-row: 1 / span 2;
-    grid-column: 1 / span 2;
-    margin-top: auto;
-    margin-bottom: auto;
-  }
-}
+/* top right of the page */
+.stop-session-button-box {
+  grid-row: 1;
+  grid-column: 2;
 
-.settings {
-  font-size: 40px;
-  text-align: left;
-  display: inline-block;
-}
-
-.settings-item {
-}
-
-.settings-footer {
-  margin-top: 20px;
+  padding: 30px;
 }
 
 .settings-header {
-  font-weight: bold;
-  margin-bottom: 20px;
+  grid-row: 1;
+
+  padding: 30px;
 }
 
-select, button {
-  font-size: 35px;
+/* stretched across all columns, skip first and last row */
+.settings {
+  grid-row: 2;
+
+  padding: 30px;
 }
 
-label {
-  margin-right: 10px;
+.settings-buttons-grid {
+  display: flex;
+  gap: 20px;
+
+  .button {
+    height: 150px;
+    font-size: 50px;
+  }
+
+}
+
+/* vertical: bottom row
+  horizontal: bottom right, maybe 1/3 of screen width */
+.start-session-button-box {
+  grid-row: 3;
+
+  padding: 30px;
+}
+
+.button {
+  border-radius: 25px;
+  border: 2px solid #000000;
+  background-color: #F0F0F0;
+
+  text-align: center;
+  align-content: center;
+
+  width: 100%;
+  height: 200px;
+
+  font-family: NotoSansJP;
+  font-size: 80px;
+
+  transition: 0.3s;
+
+  &:hover {
+    background-color: #FAFAFA;
+  }
+}
+
+.button-selected {
+  background-color: #5DBEA3;
+
+  &:hover {
+    background-color: #67C8AD;
+  }
 }
 
 span {
   display: block;
-}
-#scratchpad-root {
-  display: none;
-  flex-direction: column;
-  background-color: #ededed;
-  width: 50%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  grid-template-rows: max-content auto;
-  grid-template-columns: fit-content(30%) 1fr;
-  gap: 10px;
-}
-#scratchpad-canvas-container {
-  display: block;
-  height: 100%;
-  width: 100%;
-}
-#scratchpad {
-  display: block;
-  height: 100%;
-  width: 100%;
-}
-#scratchpad-clear, #scratchpad-autoclear-container {
-  font-size: 12pt;
-}
-#scratchpad-clear {
-  grid-row: 1;
-  grid-column: 1;
-  touch-action: auto;
-}
-#scratchpad-autoclear-container {
-  grid-row: 1;
-  grid-column: 2;
-  touch-action: auto;
-}
-#scratchpad-canvas-container {
-  grid-row: 2;
-  grid-column: 1 / span 2;
-}
-
-@media (min-aspect-ratio: 1/1) {
-  .card {
-    max-width: 50%;
-  }
-  #scratchpad-root {
-    display: grid;
-  }
-}
-
-.mode-settings {
-  #scratchpad-root, #root {
-    display: none;
-  }
-}
-
-.mode-cards #settings-root {
-  display: none;
 }

@@ -6,11 +6,12 @@ import { parseDeck, Deck } from "./Deck";
 import { loadSettings, saveSettings, Settings, SettingsView } from "./Settings";
 import { TrainingSession, TrainingSessionView } from "./TrainingSession";
 
-
 function App() {
   let [settings, setSettings] = useState<Settings>(loadSettings);
   let [deck, setDeck] = useState<Deck | null>(null);
-  let [trainingSession, setTrainingSession] = useState<TrainingSession | null>(null)
+  let [trainingSession, setTrainingSession] = useState<TrainingSession | null>(
+    null,
+  );
 
   useEffect(() => {
     if (deck === null) {
@@ -34,20 +35,30 @@ function App() {
 
   const startTrainingSession = (): void => {
     if (deck === null) {
-      console.log("Something fucky happened with setting up deck and it's not set. Fix it.")
+      console.log(
+        "Something fucky happened with setting up deck and it's not set. Fix it.",
+      );
       return;
     }
-    const newTrainingSession = new TrainingSession(deck, settings)
+    const newTrainingSession = new TrainingSession(deck, settings);
     setTrainingSession(newTrainingSession);
   };
 
-  const contents = trainingSession === null ? (
+  const contents =
+    trainingSession === null ? (
       <>
+        <div className="settings-header">
+          <h1>ひらがな</h1>
+        </div>
         <SettingsView
           settings={settings}
           updateSettingsHandler={updateSettings}
         />
-        {(deck !== null) ? <button onClick={startTrainingSession}>GO!</button> : null}
+        <div className="start-session-button-box">
+          <div className="button" onClick={startTrainingSession}>
+            start
+          </div>
+        </div>
       </>
     ) : (
       <TrainingSessionView

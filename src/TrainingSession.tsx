@@ -40,30 +40,55 @@ export class TrainingSession {
   }
 }
 
-export function TrainingSessionView(
-  { trainingSession, endTrainingSessionHandler }:
-  { trainingSession: TrainingSession,
-    endTrainingSessionHandler: () => void }
-): React.ReactNode {
+export function TrainingSessionView({
+  trainingSession,
+  endTrainingSessionHandler,
+}: {
+  trainingSession: TrainingSession;
+  endTrainingSessionHandler: () => void;
+}): React.ReactNode {
   const [card, setCard] = useState<Card>(trainingSession.nextCard());
+  const [text, setText] = useState<React.ReactNode>(
+    trainingSession.pickFrontSide(card),
+  );
   const [flipped, setFlipped] = useState<boolean>(false);
-  const [text, setText] = useState<React.ReactNode>(trainingSession.pickFrontSide(card));
 
-  const flipCard = (card: Card) => {
-    let cardText = <>{card.kana}<br />{card.english}</>;
-    setText(cardText);
+  const flipCard = () => {
+    let newText = (
+      <>
+        <span>{card.kana}</span>
+        <span>{card.english}</span>
+      </>
+    );
+    setText(newText);
     setFlipped(true);
   };
 
   const pickNewCard = () => {
     const newCard = trainingSession.nextCard();
+    const newText = <span>{trainingSession.pickFrontSide(newCard)}</span>;
     setCard(newCard);
-    setText(trainingSession.pickFrontSide(newCard));
+    setText(newText);
     setFlipped(false);
-  }
+  };
 
-  return <>
-    <button onClick={endTrainingSessionHandler}>END</button>
-    <div onClick={() => flipped ? pickNewCard() : flipCard(card)}>{text}</div>
-  </>;
+  // NOTE: remember to draw card-content first! It stretches across whole page, to make card flip
+  // easy, and if it's rendered last, it will be painted ove navigation button, which in turn will
+  // become unclickable.
+  return (
+    <>
+      <div
+        className="card-content"
+        onClick={() => (flipped ? pickNewCard() : flipCard())}
+      >
+        {text}
+      </div>
+      <div
+        className="stop-session-button-box"
+        onClick={endTrainingSessionHandler}
+      >
+        <img src="cross-svgrepo-com.svg" width="100" height="100" />
+      </div>
+    </>
+  );
 }

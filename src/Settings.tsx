@@ -18,7 +18,7 @@ const DEFAULT_SETTINGS: Settings = {
 
 export function loadSettings(): Settings {
   let settings = JSON.parse(
-    window.localStorage.getItem(SETTINGS_LOCAL_STORAGE_KEY) || "",
+    window.localStorage.getItem(SETTINGS_LOCAL_STORAGE_KEY) || "{}",
   );
 
   settings = { ...DEFAULT_SETTINGS, ...settings };
@@ -51,9 +51,7 @@ export function SettingsView({
     </option>
   ));
 
-  const updateFrontSide = (e) => {
-    console.log(e.target.value);
-    const frontSide = e.target.value as CardSide;
+  const updateFrontSide = (frontSide: CardSide) => {
     const newSettings: Settings = {
       ...settings,
       frontSide: frontSide,
@@ -61,19 +59,34 @@ export function SettingsView({
     updateSettingsHandler(newSettings);
   };
 
+  const labels: Array<[CardSide, React.ReactNode]> = [
+    [CardSide.KANA, "かな"],
+    [CardSide.ENGLISH, "english"],
+    [
+      CardSide.RANDOM,
+      <img src="dice-svgrepo-com.svg" width="60" height="60" />,
+    ],
+  ];
+
+  const options = labels.map((item) => {
+    const [option, label] = item;
+    const cssClass =
+      option === settings.frontSide ? "button button-selected" : "button";
+    return (
+      <div
+        key={option}
+        className={cssClass}
+        onClick={() => updateFrontSide(option)}
+      >
+        {label}
+      </div>
+    );
+  });
+
   return (
     <div className="settings">
-      <span className="settings-item">
-        <label htmlFor="frontSide">Card side to show first</label>
-        <select
-          id="frontSide"
-          name="frontSide"
-          value={settings.frontSide}
-          onChange={updateFrontSide}
-        >
-          {frontSideOptions}
-        </select>
-      </span>
+      <p>Card front:</p>
+      <div className="settings-buttons-grid">{options}</div>
     </div>
   );
 }
