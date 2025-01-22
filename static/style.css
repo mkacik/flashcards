@@ -55,7 +55,9 @@ body {
 
   padding: 30px;
 
-  font-size: 50px;
+  img {
+    vertical-align: top;
+  }
 }
 
 /* stretched across all columns, skip first and last row */
@@ -109,6 +111,10 @@ body {
   &:hover {
     background-color: #FAFAFA;
   }
+
+  img {
+    vertical-align: middle;
+  }
 }
 
 .button-selected {
@@ -117,14 +123,6 @@ body {
   &:hover {
     background-color: #67C8AD;
   }
-}
-
-span {
-  display: block;
-}
-
-img {
-  vertical-align: middle;
 }
 
 /* SCRATCHPAD BELOW */
