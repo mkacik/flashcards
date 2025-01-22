@@ -38,28 +38,23 @@ export function saveSettings(settings: Settings): void {
   );
 }
 
-export function SettingsView({
+export function SettingsEditor({
   settings,
   updateSettingsHandler,
 }: {
   settings: Settings;
   updateSettingsHandler: (settings: Settings) => void;
 }): React.ReactNode {
-  let frontSideOptions = Object.values(CardSide).map((item, index) => (
-    <option key={index} value={item}>
-      {item}
-    </option>
-  ));
-
   const updateFrontSide = (frontSide: CardSide) => {
     const newSettings: Settings = {
       ...settings,
       frontSide: frontSide,
     } as Settings;
+    saveSettings(settings)
     updateSettingsHandler(newSettings);
   };
 
-  const labels: Array<[CardSide, React.ReactNode]> = [
+  const frontSideLabels: Array<[CardSide, React.ReactNode]> = [
     [CardSide.KANA, "かな"],
     [CardSide.ENGLISH, "english"],
     [
@@ -68,13 +63,13 @@ export function SettingsView({
     ],
   ];
 
-  const options = labels.map((item) => {
+  const frontSideOptions = frontSideLabels.map((item, index) => {
     const [option, label] = item;
     const cssClass =
       option === settings.frontSide ? "button button-selected" : "button";
     return (
       <div
-        key={option}
+        key={index}
         className={cssClass}
         onClick={() => updateFrontSide(option)}
       >
@@ -85,8 +80,9 @@ export function SettingsView({
 
   return (
     <div className="settings">
-      <p>Card front:</p>
-      <div className="settings-buttons-grid">{options}</div>
+      <div className="settings-buttons-grid">
+        {frontSideOptions}
+      </div>
     </div>
   );
 }

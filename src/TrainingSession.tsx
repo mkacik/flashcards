@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { CardSide, Settings } from "./Settings";
 import { Deck, Card, CardID } from "./Deck";
+import { TopRightButton } from "./Common";
 
 const getRandomInt = (max: number): number => {
   return Math.floor(Math.random() * max);
@@ -83,12 +84,10 @@ export function TrainingSessionView({
       >
         {text}
       </div>
-      <div
-        className="stop-session-button-box"
+      <TopRightButton
         onClick={endTrainingSessionHandler}
-      >
-        <img src="cross-svgrepo-com.svg" width="100" height="100" />
-      </div>
+        imageUrl="cross-svgrepo-com.svg"
+        size={100} />
     </>
   );
 }
