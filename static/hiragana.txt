@@ -36,7 +36,7 @@ he,へ
 ho,ほ
 # M-LINE
 ma,ま
-mi,み,
+mi,み
 mu,む
 me,め
 mo,も
