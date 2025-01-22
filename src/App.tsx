@@ -107,7 +107,7 @@ function Flashcards({ deck }: { deck: Deck }) {
           </>
         )}
       </div>
-      {scratchpadEnabled ? <Scratchpad /> : null}
+      {showScratchpad ? <Scratchpad /> : null}
     </>
   );
 }
@@ -126,10 +126,9 @@ function AppRoot() {
     }
   }, [deck, setDeck]);
 
-  if (deck === null) {
-    return null;
-  }
-  return <Flashcards deck={deck} />;
+  return (deck === null)
+    ? null
+    : <Flashcards deck={deck} />;
 }
 
 const domContainer = document.querySelector("#root")!;

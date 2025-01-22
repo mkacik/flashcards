@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { CardSide, PersistentSettings } from "./Settings";
-import { Deck, Card, CardID } from "./Deck";
+import { Deck, Card } from "./Deck";
 
 const getRandomInt = (max: number): number => {
   return Math.floor(Math.random() * max);
@@ -30,7 +30,7 @@ function pickCard(deck: Deck): Card {
 }
 
 export function PracticeSession(
-  { deck, settings },
+  { deck, settings }:
   { deck: Deck, settings: PersistentSettings },
 ): React.ReactNode {
   const pickFrontSide = getPickFrontSideFunction(settings);

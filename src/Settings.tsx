@@ -59,7 +59,7 @@ export function SettingsEditor({
     [CardSide.ENGLISH, "english"],
     [
       CardSide.RANDOM,
-      <img src="dice-svgrepo-com.svg" width="60" height="60" />,
+      <img key="dice" src="dice-svgrepo-com.svg" width="60" height="60" />,
     ],
   ];
 
