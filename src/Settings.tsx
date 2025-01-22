@@ -8,30 +8,30 @@ export enum CardSide {
   KANA = "kana",
 }
 
-export type Settings = {
+export type PersistentSettings = {
   frontSide: CardSide;
 };
 
-const DEFAULT_SETTINGS: Settings = {
+const DEFAULT_SETTINGS: PersistentSettings = {
   frontSide: CardSide.RANDOM,
-} as Settings;
+} as PersistentSettings;
 
-export function loadSettings(): Settings {
+export function loadSettings(): PersistentSettings {
   let settings = JSON.parse(
     window.localStorage.getItem(SETTINGS_LOCAL_STORAGE_KEY) || "{}",
   );
 
   settings = { ...DEFAULT_SETTINGS, ...settings };
 
-  // Not returning `settings as Settings` directly because I want to ensure wiping of the obsolete
+  // Not returning `settings as PersistentSettings` directly because I want to ensure wiping of the obsolete
   // keys when saving.
-  const typedSettings: Settings = {
+  const typedSettings: PersistentSettings = {
     frontSide: settings.frontSide!,
-  } as Settings;
+  } as PersistentSettings;
   return typedSettings;
 }
 
-export function saveSettings(settings: Settings): void {
+export function saveSettings(settings: PersistentSettings): void {
   window.localStorage.setItem(
     SETTINGS_LOCAL_STORAGE_KEY,
     JSON.stringify(settings),
@@ -42,19 +42,19 @@ export function SettingsEditor({
   settings,
   updateSettingsHandler,
 }: {
-  settings: Settings;
-  updateSettingsHandler: (settings: Settings) => void;
+  settings: PersistentSettings;
+  updateSettingsHandler: (settings: PersistentSettings) => void;
 }): React.ReactNode {
   const updateFrontSide = (frontSide: CardSide) => {
-    const newSettings: Settings = {
+    const newSettings: PersistentSettings = {
       ...settings,
       frontSide: frontSide,
-    } as Settings;
-    saveSettings(settings)
+    } as PersistentSettings;
+    saveSettings(newSettings);
     updateSettingsHandler(newSettings);
   };
 
-  const frontSideLabels: Array<[CardSide, React.ReactNode]> = [
+  const labels: Array<[CardSide, React.ReactNode]> = [
     [CardSide.KANA, "かな"],
     [CardSide.ENGLISH, "english"],
     [
@@ -63,7 +63,7 @@ export function SettingsEditor({
     ],
   ];
 
-  const frontSideOptions = frontSideLabels.map((item, index) => {
+  const options = labels.map((item, index) => {
     const [option, label] = item;
     const cssClass =
       option === settings.frontSide ? "button button-selected" : "button";
@@ -80,9 +80,7 @@ export function SettingsEditor({
 
   return (
     <div className="settings">
-      <div className="settings-buttons-grid">
-        {frontSideOptions}
-      </div>
+      <div className="settings-buttons-grid">{options}</div>
     </div>
   );
 }
