@@ -30,8 +30,8 @@ function pickCard(deck: Deck): Card {
 }
 
 export function PracticeSession(
-  { deck, settings }:
-  { deck: Deck, settings: PersistentSettings },
+  { deck, settings, bumpCardCount }:
+  { deck: Deck, settings: PersistentSettings, bumpCardCount: () => void },
 ): React.ReactNode {
   const pickFrontSide = getPickFrontSideFunction(settings);
 
@@ -56,6 +56,7 @@ export function PracticeSession(
     setCard(card);
     setText(text);
     setFlipped(false);
+    bumpCardCount();
   };
 
   return (

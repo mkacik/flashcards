@@ -7,7 +7,7 @@ type Point = {
   pressure: number;
 }
 
-export function Scratchpad(): React.ReactNode {
+export function Scratchpad({cardCount}:{cardCount: number}): React.ReactNode {
   // TODO: this currently does nothing!
   const [autoclear, setAutoclear] = useState<boolean>(true);
 
@@ -112,10 +112,23 @@ export function Scratchpad(): React.ReactNode {
     }
   };
 
+  // Following code is used to enable autoclear when card changes, I don't actually need
+  // card count here, just *some* value that will change whenever new card is picked.
+  const [lastSeenCardCount, setLastSeenCardCount] = useState<number>(0);
+
+  useEffect(() => {
+    if (cardCount !== lastSeenCardCount) {
+      if (autoclear) {
+        clearCanvas();
+      }
+      setLastSeenCardCount(cardCount);
+    }
+  }, [cardCount, lastSeenCardCount, setLastSeenCardCount]);
+
   return (
     <div id="scratchpad-root">
       <button onClick={clearCanvas} id="scratchpad-clear">⌫ Clear</button>
-      <div style={{display: "none"}} id="scratchpad-autoclear-container">
+      <div id="scratchpad-autoclear-container">
         <input
           type="checkbox"
           id="scratchpad-autoclear"

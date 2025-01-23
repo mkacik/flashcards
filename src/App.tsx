@@ -52,11 +52,13 @@ function getHorizontalMode(): boolean {
 function Flashcards({ deck }: { deck: Deck }) {
   const [settings, setSettings] = useState<PersistentSettings>(loadSettings);
   const [practiceInProgress, setPracticeInProgress] = useState<boolean>(false);
+  const [cardCount, setCardCount] = useState<number>(0);
 
   const updateSettings = (settings: PersistentSettings): void =>
     setSettings(settings);
   const startPractice = () => setPracticeInProgress(true);
   const endPractice = () => setPracticeInProgress(false);
+  const bumpCardCount = () => setCardCount(cardCount + 1);
 
   // Screen aspect ratio is used to determine wether the scratchpad toggle should be visible.
   // If scratchpad is then toggled on, it will only show in horizontal.
@@ -79,7 +81,7 @@ function Flashcards({ deck }: { deck: Deck }) {
       <div className="card">
         {practiceInProgress ? (
           <>
-            <PracticeSession deck={deck} settings={settings} />
+            <PracticeSession deck={deck} settings={settings} bumpCardCount={bumpCardCount} />
 
             <TopRightGlyph
               onClick={endPractice}
@@ -107,7 +109,7 @@ function Flashcards({ deck }: { deck: Deck }) {
           </>
         )}
       </div>
-      {showScratchpad ? <Scratchpad /> : null}
+      {showScratchpad ? <Scratchpad cardCount={cardCount} /> : null}
     </>
   );
 }
