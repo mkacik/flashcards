@@ -40,14 +40,12 @@ export function Scratchpad(): React.ReactNode {
   }, []);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const clearButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const clearButton = clearButtonRef.current;
     const stroke: Array<Point> = [];
 
-    if ((canvas === null) || (clearButton === null)) {
+    if (canvas === null) {
       return;
     }
 
@@ -94,28 +92,29 @@ export function Scratchpad(): React.ReactNode {
       drawOnCanvas();
     };
 
-    const clearCanvas = () => {
-      canvas.getContext('2d')!.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
     const clearStroke = () => {
       stroke.length = 0;
     };
 
     canvas.addEventListener('pointermove', onCanvasPointerMove);
     canvas.addEventListener('pointerleave', clearStroke);
-    clearButton.addEventListener('click', clearCanvas);
 
     return () => {
       canvas.removeEventListener('pointermove', onCanvasPointerMove);
       canvas.removeEventListener('pointerleave', clearStroke);
-      clearButton.removeEventListener('click', clearCanvas);
     };
   });
 
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    if (canvas !== null) {
+      canvas.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  };
+
   return (
     <div id="scratchpad-root">
-      <button ref={clearButtonRef} id="scratchpad-clear">⌫ Clear</button>
+      <button onClick={clearCanvas} id="scratchpad-clear">⌫ Clear</button>
       <div style={{display: "none"}} id="scratchpad-autoclear-container">
         <input
           type="checkbox"
