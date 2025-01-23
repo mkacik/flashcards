@@ -412,6 +412,7 @@ function disableSafariTouchSelection() {
 async function setUp() {
   disableSafariTouchSelection();
   document.getElementById('settings-button').addEventListener('click', openSettingsPage);
+
   document.getElementById('scratchpad').addEventListener('pointermove', onCanvasPointerMove);
   document.getElementById('scratchpad').addEventListener('pointerleave', () => { stroke.length = 0; });
   document.getElementById('scratchpad-clear').addEventListener('click', clearCanvas);
