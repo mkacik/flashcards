@@ -116,7 +116,7 @@ export function Scratchpad(): React.ReactNode {
   return (
     <div id="scratchpad-root">
       <button ref={clearButtonRef} id="scratchpad-clear">⌫ Clear</button>
-      <div id="scratchpad-autoclear-container">
+      <div style={{display: "none"}} id="scratchpad-autoclear-container">
         <input
           type="checkbox"
           id="scratchpad-autoclear"
