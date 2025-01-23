@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "static",
+    "outDir": "docs",
     "noImplicitAny": false,
     "strict": true,
     "module": "es2022",
