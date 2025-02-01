@@ -52,6 +52,73 @@ re,れ
 ro,ろ
 # W-LINE
 wa,わ
-wo/o,を
+wo,を
 # N
 n,ん
+# G-LINE
+ga,が
+gi,ぎ
+gu,ぐ
+ge,げ
+go,ご
+# Z-LINE
+za,ざ
+ji,じ
+zu,ず
+ze,ぜ
+zo,ぞ
+# D-LINE
+da,だ
+ji,ぢ
+zu,づ
+de,で
+do,ど
+# B-LINE
+ba,ば
+bi,び
+bu,ぶ
+be,べ
+bo,ぼ
+# P-LINE
+pa,ぱ
+pi,ぴ
+pu,ぷ
+pe,ぺ
+po,ぽ
+# DIGRAPHS
+kya,きゃ
+kyu,きゅ
+kyo,きょ
+sha,しゃ
+shu,しゅ
+sho,しょ
+cha,ちゃ
+chu,ちゅ
+cho,ちょ
+nya,にゃ
+nyu,にゅ
+nyo,にょ
+hya,ひゃ
+hyu,ひゅ
+hyo,ひょ
+mya,みゃ
+myu,みゅ
+myo,みょ
+rya,りゃ
+ryu,りゅ
+ryo,りょ
+gya,ぎゃ
+gyu,ぎゅ
+gyo,ぎょ
+ja,じゃ
+ju,じゅ
+jo,じょ
+ja,ぢゃ
+ju,ぢゅ
+jo,ぢょ
+bya,びゃ
+byu,びゅ
+byo,びょ
+pya,ぴゃ
+pyu,ぴゅ
+pyo,ぴょ
