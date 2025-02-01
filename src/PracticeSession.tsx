@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { CardSide, PersistentSettings } from "./Settings";
+import { FrontSide, PersistentSettings } from "./Settings";
 import { Deck, Card } from "./Deck";
 
 const getRandomInt = (max: number): number => {
@@ -13,11 +13,11 @@ function getPickFrontSideFunction(
   settings: PersistentSettings,
 ): PickFrontSideFunction {
   switch (settings.frontSide) {
-    case CardSide.ENGLISH:
+    case FrontSide.ENGLISH:
       return (card: Card) => card.english;
-    case CardSide.KANA:
+    case FrontSide.KANA:
       return (card: Card) => card.kana;
-    case CardSide.RANDOM:
+    case FrontSide.RANDOM:
       return (card: Card) => (getRandomInt(2) == 0 ? card.english : card.kana);
   }
 }

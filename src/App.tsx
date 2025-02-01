@@ -92,7 +92,6 @@ function Flashcards({ deck }: { deck: Deck }) {
           </>
         ) : (
           <>
-            <div className="page-header">ひらがな</div>
             <SettingsEditor
               settings={settings}
               updateSettingsHandler={updateSettings}
@@ -119,7 +118,7 @@ function AppRoot() {
 
   useEffect(() => {
     if (deck === null) {
-      fetch("hiragana.txt")
+      fetch("kana.txt")
         .then((response) => response.text())
         .then((text) => {
           const deck = parseDeck(text);

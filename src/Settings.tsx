@@ -2,18 +2,32 @@ import React from "react";
 
 const SETTINGS_LOCAL_STORAGE_KEY = "FLASHCARDS.settings";
 
-export enum CardSide {
+export enum FrontSide {
   RANDOM = "random",
   ENGLISH = "english",
   KANA = "kana",
 }
 
+export enum Kana {
+  HIRAGANA = "hiragana",
+  KATAKANA = "katakana",
+}
+
+export enum DeckType {
+  BASE = "base",
+  FULL = "full",
+}
+
 export type PersistentSettings = {
-  frontSide: CardSide;
+  kana: Kana,
+  deckType: DeckType,
+  frontSide: FrontSide;
 };
 
 const DEFAULT_SETTINGS: PersistentSettings = {
-  frontSide: CardSide.RANDOM,
+  kana: Kana.HIRAGANA,
+  deckType: DeckType.FULL,
+  frontSide: FrontSide.RANDOM,
 } as PersistentSettings;
 
 export function loadSettings(): PersistentSettings {
@@ -23,9 +37,11 @@ export function loadSettings(): PersistentSettings {
 
   settings = { ...DEFAULT_SETTINGS, ...settings };
 
-  // Not returning `settings as PersistentSettings` directly because I want to ensure wiping of the obsolete
-  // keys when saving.
+  // Not returning `settings as PersistentSettings` directly because I want to ensure wiping of
+  // the obsolete keys when saving.
   const typedSettings: PersistentSettings = {
+    kana: settings.kana!,
+    deckType: settings.deckType!,
     frontSide: settings.frontSide!,
   } as PersistentSettings;
   return typedSettings;
@@ -38,6 +54,68 @@ export function saveSettings(settings: PersistentSettings): void {
   );
 }
 
+function SelectableButton({ label, selected, onClick }:
+{ label: React.ReactNode, selected: boolean, onClick: () => void }) {
+  const cssClass = selected ? "button button-selected" : "button";
+  return (
+    <div className={cssClass} onClick={onClick}>
+      {label}
+    </div>
+  );
+}
+
+function getFrontSideSelector(
+  selectedOption: FrontSide,
+  updateSettingsItem: (SettingsItem) => void
+) {
+  const labels: Array<[FrontSide, React.ReactNode]> = [
+    [FrontSide.KANA, "かな"],
+    [FrontSide.ENGLISH, "english"],
+    [
+      FrontSide.RANDOM,
+      <img key="dice" src="dice-svgrepo-com.svg" width="60" height="60" />,
+    ],
+  ];
+
+  return labels.map((item, index) => {
+    const [option, label] = item;
+    return (
+      <SelectableButton
+        label={label}
+        selected={option === selectedOption}
+        onClick={() => updateSettingsItem({frontSide: option})}
+        key={index} />
+    );
+  });
+}
+
+function getKanaSelector(
+  selectedOption: Kana,
+  updateSettingsItem: (SettingsItem) => void
+) {
+  const labels: Array<[Kana, React.ReactNode]> = [
+    [Kana.HIRAGANA, "ひらがな"],
+    [Kana.KATAKANA, "カタカナ"],
+  ];
+
+  const options = labels.map((item, index) => {
+    const [option, label] = item;
+    return (
+      <SelectableButton
+        label={label}
+        selected={option === selectedOption}
+        onClick={() => updateSettingsItem({kana: option})}
+        key={index} />
+    );
+  });
+
+  options.push(<div className="spacer" key={labels.length} ></div>);
+  return options;
+}
+
+
+type SettingsItem = { kana: Kana } | { deckType: DeckType} | { frontSide: FrontSide };
+
 export function SettingsEditor({
   settings,
   updateSettingsHandler,
@@ -45,42 +123,23 @@ export function SettingsEditor({
   settings: PersistentSettings;
   updateSettingsHandler: (settings: PersistentSettings) => void;
 }): React.ReactNode {
-  const updateFrontSide = (frontSide: CardSide) => {
+  const updateSettingsItem = (update: SettingsItem) => {
     const newSettings: PersistentSettings = {
       ...settings,
-      frontSide: frontSide,
+      ...update
     } as PersistentSettings;
     saveSettings(newSettings);
     updateSettingsHandler(newSettings);
   };
 
-  const labels: Array<[CardSide, React.ReactNode]> = [
-    [CardSide.KANA, "かな"],
-    [CardSide.ENGLISH, "english"],
-    [
-      CardSide.RANDOM,
-      <img key="dice" src="dice-svgrepo-com.svg" width="60" height="60" />,
-    ],
-  ];
-
-  const options = labels.map((item, index) => {
-    const [option, label] = item;
-    const cssClass =
-      option === settings.frontSide ? "button button-selected" : "button";
-    return (
-      <div
-        key={index}
-        className={cssClass}
-        onClick={() => updateFrontSide(option)}
-      >
-        {label}
-      </div>
-    );
-  });
-
   return (
     <div className="settings">
-      <div className="settings-buttons-grid">{options}</div>
+      <div className="settings-buttons-grid">
+        {getKanaSelector(settings.kana, updateSettingsItem)}
+      </div>
+      <div className="settings-buttons-grid">
+        {getFrontSideSelector(settings.frontSide, updateSettingsItem)}
+      </div>
     </div>
   );
 }
