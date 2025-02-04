@@ -52,7 +52,7 @@ re,れ,レ
 ro,ろ,ロ
 # W-LINE
 wa,わ,ワ
-wo,を,ヲ
+o(wo),を,ヲ
 # N
 n,ん,ン
 # G-LINE
@@ -69,8 +69,8 @@ ze,ぜ,ゼ
 zo,ぞ,ゾ
 # D-LINE
 da,だ,ダ
-ji,ぢ,ヂ
-zu,づ,ヅ
+ji(di),ぢ,ヂ
+zu(du),づ,ヅ
 de,で,デ
 do,ど,ド
 # B-LINE

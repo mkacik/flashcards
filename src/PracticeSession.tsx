@@ -49,8 +49,6 @@ function pickCard(deck: Deck, settings: PersistentSettings): SessionCard {
     } as SessionCard;
   }
 
-  // TODO: if front is english, look up for possible same spelling characters and put them
-  // both on card back side
   return {
     front: wrap(english),
     back: wrap(kana),
