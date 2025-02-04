@@ -2,7 +2,8 @@ export type CardID = number;
 
 export type Card = {
   english: string;
-  kana: string;
+  hiragana: string;
+  katakana: string;
 };
 
 export type Deck = Map<CardID, Card>;
@@ -18,10 +19,11 @@ export function parseDeck(deck: string): Deck {
     }
 
     const sides = row.split(",");
-    if (sides.length === 2) {
+    if (sides.length === 3) {
       const card: Card = {
         english: sides[0],
-        kana: sides[1],
+        hiragana: sides[1],
+        katakana: sides[2],
       } as Card;
 
       cards.set(cardID, card);

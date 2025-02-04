@@ -66,15 +66,15 @@ function SelectableButton({ label, selected, onClick }:
 
 function getFrontSideSelector(
   selectedOption: FrontSide,
+  selectedKana: Kana,
   updateSettingsItem: (SettingsItem) => void
 ) {
+  const kanaLabel = selectedKana === Kana.HIRAGANA ? "かな" : "カナ";
+  const randomLabel = <img key="dice" src="dice-svgrepo-com.svg" width="60" height="60" />;
   const labels: Array<[FrontSide, React.ReactNode]> = [
-    [FrontSide.KANA, "かな"],
+    [FrontSide.KANA, kanaLabel],
     [FrontSide.ENGLISH, "english"],
-    [
-      FrontSide.RANDOM,
-      <img key="dice" src="dice-svgrepo-com.svg" width="60" height="60" />,
-    ],
+    [FrontSide.RANDOM, randomLabel],
   ];
 
   return labels.map((item, index) => {
@@ -138,7 +138,7 @@ export function SettingsEditor({
         {getKanaSelector(settings.kana, updateSettingsItem)}
       </div>
       <div className="settings-buttons-grid">
-        {getFrontSideSelector(settings.frontSide, updateSettingsItem)}
+        {getFrontSideSelector(settings.frontSide, settings.kana, updateSettingsItem)}
       </div>
     </div>
   );

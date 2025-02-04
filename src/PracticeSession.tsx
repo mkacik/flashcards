@@ -16,9 +16,9 @@ function getPickFrontSideFunction(
     case FrontSide.ENGLISH:
       return (card: Card) => card.english;
     case FrontSide.KANA:
-      return (card: Card) => card.kana;
+      return (card: Card) => card.hiragana;
     case FrontSide.RANDOM:
-      return (card: Card) => (getRandomInt(2) == 0 ? card.english : card.kana);
+      return (card: Card) => (getRandomInt(2) == 0 ? card.english : card.hiragana);
   }
 }
 
@@ -42,7 +42,7 @@ export function PracticeSession(
   const flipCard = () => {
     const text = (
       <>
-        <div>{card.kana}</div>
+        <div>{card.hiragana}</div>
         <div>{card.english}</div>
       </>
     );
