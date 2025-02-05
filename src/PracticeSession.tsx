@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { FrontSide, Kana, PersistentSettings } from "./Settings";
-import { Deck, Card } from "./Deck";
+import { Deck } from "./Deck";
 
 const getRandomInt = (max: number): number => {
   return Math.floor(Math.random() * max);
@@ -29,15 +29,14 @@ function wrap(...args: string[]) {
 // Deck card has 3 sides - en, hiragana & katakana. In practice session context, card should only
 // have two sides, so I use following struct and function to pick new deck card and turn it to
 // 2-sided flashcard.
-type SessionCard = {
+type FlashCard = {
   front: React.ReactElement;
   back: React.ReactElement;
 };
 
-function pickCard(deck: Deck, settings: PersistentSettings): SessionCard {
-  const cardsArray = Array.from(deck.values());
-  const randomIndex = getRandomInt(cardsArray.length);
-  const deckCard = cardsArray[randomIndex];
+function pickCard(deck: Deck, settings: PersistentSettings): FlashCard {
+  const randomIndex = getRandomInt(deck.length);
+  const deckCard = deck[randomIndex];
 
   const english = deckCard.english;
   const kana = (settings.kana == Kana.HIRAGANA) ? deckCard.hiragana : deckCard.katakana;
@@ -46,20 +45,20 @@ function pickCard(deck: Deck, settings: PersistentSettings): SessionCard {
     return {
       front: wrap(kana),
       back: wrap(english),
-    } as SessionCard;
+    } as FlashCard;
   }
 
   return {
     front: wrap(english),
     back: wrap(kana),
-  } as SessionCard;
+  } as FlashCard;
 }
 
 export function PracticeSession(
   { deck, settings, bumpCardCount }:
   { deck: Deck, settings: PersistentSettings, bumpCardCount: () => void },
 ): React.ReactNode {
-  const [card, setCard] = useState<SessionCard>(pickCard(deck, settings));
+  const [card, setCard] = useState<FlashCard>(pickCard(deck, settings));
   const [flipped, setFlipped] = useState<boolean>(false);
 
   const pickNewCard = () => {

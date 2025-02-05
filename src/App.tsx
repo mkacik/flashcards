@@ -49,7 +49,11 @@ function getHorizontalMode(): boolean {
   return width / height > 1;
 }
 
-function Flashcards({ deck }: { deck: Deck }) {
+function getDeckForPracticeSession(decks: Decks, settings: PersistentSettings): Deck {
+  return decks.basic;
+}
+
+function Flashcards({ decks }: { decks: Decks }) {
   const [settings, setSettings] = useState<PersistentSettings>(loadSettings);
   const [practiceInProgress, setPracticeInProgress] = useState<boolean>(false);
   const [cardCount, setCardCount] = useState<number>(0);
@@ -81,7 +85,10 @@ function Flashcards({ deck }: { deck: Deck }) {
       <div className="card">
         {practiceInProgress ? (
           <>
-            <PracticeSession deck={deck} settings={settings} bumpCardCount={bumpCardCount} />
+            <PracticeSession
+              deck={getDeckForPracticeSession(decks, settings)}
+              settings={settings}
+              bumpCardCount={bumpCardCount} />
 
             <TopRightGlyph
               onClick={endPractice}
@@ -113,23 +120,43 @@ function Flashcards({ deck }: { deck: Deck }) {
   );
 }
 
+type Decks = {
+  basic: Deck,
+  modified: Deck,
+};
+
+async function fetchDeck(url: string): Promise<Deck> {
+  const request = fetch(url);
+  const response = await request;
+  const text = await response.text();
+  return parseDeck(text);
+}
+
 function AppRoot() {
-  const [deck, setDeck] = useState<Deck | null>(null);
+  const [basicDeck, setBasicDeck] = useState<Deck | null>(null);
+  const [modifiedDeck, setModifiedDeck] = useState<Deck | null>(null);
 
   useEffect(() => {
-    if (deck === null) {
-      fetch("kana.txt")
-        .then((response) => response.text())
-        .then((text) => {
-          const deck = parseDeck(text);
-          setDeck(deck);
-        });
+    if (basicDeck === null) {
+      fetchDeck("kana.txt").then((deck) => setBasicDeck(deck));
     }
-  }, [deck, setDeck]);
+  }, [basicDeck, setBasicDeck]);
 
-  return (deck === null)
-    ? null
-    : <Flashcards deck={deck} />;
+  useEffect(() => {
+    if (modifiedDeck === null) {
+      fetchDeck("kana.txt").then((deck) => setModifiedDeck(deck));
+    }
+  }, [modifiedDeck, setModifiedDeck]);
+
+  if ((basicDeck === null) || (modifiedDeck === null)) {
+    return null;
+  }
+
+  const decks: Decks = {
+    basic: basicDeck,
+    modified: modifiedDeck,
+  } as Decks;
+  return <Flashcards decks={decks} />;
 }
 
 const domContainer = document.querySelector("#root")!;

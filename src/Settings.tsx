@@ -14,7 +14,7 @@ export enum Kana {
 }
 
 export enum DeckType {
-  BASE = "base",
+  BASE = "basic",
   FULL = "full",
 }
 
