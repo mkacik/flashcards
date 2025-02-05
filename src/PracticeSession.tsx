@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FrontSide, Kana, PersistentSettings } from "./Settings";
 import { Deck } from "./Deck";
 
@@ -80,10 +80,23 @@ export function PracticeSession({
     bumpCardCount();
   };
 
+  const flipCard = () => flipped ? pickNewCard() : setFlipped(true);
+
+  useEffect(() => {
+    const flipCardOnSpacePressed = (e) => {
+      if (e.key === " ") {
+        flipCard();
+      };
+    }
+    document.addEventListener("keydown", flipCardOnSpacePressed);
+
+    return () => document.removeEventListener("keydown" , flipCardOnSpacePressed);
+  });
+
   return (
     <div
       className="card-content"
-      onClick={() => (flipped ? pickNewCard() : setFlipped(true))}
+      onClick={flipCard}
     >
       {flipped ? card.back : card.front}
     </div>
