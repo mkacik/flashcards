@@ -3,7 +3,12 @@ import { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 
 import { parseDeck, Deck } from "./Deck";
-import { loadSettings, PersistentSettings, SettingsEditor } from "./Settings";
+import {
+  loadSettings,
+  PersistentSettings,
+  SettingsEditor,
+  DeckType,
+} from "./Settings";
 import { PracticeSession } from "./PracticeSession";
 import { Scratchpad } from "./Scratchpad";
 
@@ -49,8 +54,17 @@ function getHorizontalMode(): boolean {
   return width / height > 1;
 }
 
-function getDeckForPracticeSession(decks: Decks, settings: PersistentSettings): Deck {
-  return decks.basic;
+function getDeckForPracticeSession(
+  decks: Decks,
+  settings: PersistentSettings,
+): Deck {
+  switch (settings.deckType) {
+    case DeckType.BASIC:
+      return decks.basic;
+    case DeckType.MODIFIED:
+      return decks.modified;
+  }
+  return decks.basic.concat(decks.modified);
 }
 
 function Flashcards({ decks }: { decks: Decks }) {
@@ -88,7 +102,8 @@ function Flashcards({ decks }: { decks: Decks }) {
             <PracticeSession
               deck={getDeckForPracticeSession(decks, settings)}
               settings={settings}
-              bumpCardCount={bumpCardCount} />
+              bumpCardCount={bumpCardCount}
+            />
 
             <TopRightGlyph
               onClick={endPractice}
@@ -121,12 +136,12 @@ function Flashcards({ decks }: { decks: Decks }) {
 }
 
 type Decks = {
-  basic: Deck,
-  modified: Deck,
+  basic: Deck;
+  modified: Deck;
 };
 
 async function fetchDeck(url: string): Promise<Deck> {
-  const request = fetch(url);
+  const request = fetch("decks/" + url);
   const response = await request;
   const text = await response.text();
   return parseDeck(text);
@@ -138,17 +153,17 @@ function AppRoot() {
 
   useEffect(() => {
     if (basicDeck === null) {
-      fetchDeck("kana.txt").then((deck) => setBasicDeck(deck));
+      fetchDeck("basic.txt").then((deck) => setBasicDeck(deck));
     }
   }, [basicDeck, setBasicDeck]);
 
   useEffect(() => {
     if (modifiedDeck === null) {
-      fetchDeck("kana.txt").then((deck) => setModifiedDeck(deck));
+      fetchDeck("modified.txt").then((deck) => setModifiedDeck(deck));
     }
   }, [modifiedDeck, setModifiedDeck]);
 
-  if ((basicDeck === null) || (modifiedDeck === null)) {
+  if (basicDeck === null || modifiedDeck === null) {
     return null;
   }
 

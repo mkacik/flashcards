@@ -5,9 +5,13 @@ type Point = {
   x: number;
   y: number;
   pressure: number;
-}
+};
 
-export function Scratchpad({cardCount}:{cardCount: number}): React.ReactNode {
+export function Scratchpad({
+  cardCount,
+}: {
+  cardCount: number;
+}): React.ReactNode {
   // TODO: this currently does nothing!
   const [autoclear, setAutoclear] = useState<boolean>(true);
 
@@ -21,12 +25,12 @@ export function Scratchpad({cardCount}:{cardCount: number}): React.ReactNode {
       e.preventDefault();
     };
 
-    const events = ['touchstart', 'touchmove', 'touchend', 'touchcancel'];
+    const events = ["touchstart", "touchmove", "touchend", "touchcancel"];
 
     const target = containerRef.current;
     if (target !== null) {
       for (const e of events) {
-        target.addEventListener(e, killItWithFire, {passive: false});
+        target.addEventListener(e, killItWithFire, { passive: false });
       }
     }
 
@@ -51,10 +55,10 @@ export function Scratchpad({cardCount}:{cardCount: number}): React.ReactNode {
 
     const drawOnCanvas = () => {
       const i = stroke.length - 1;
-      const ctx = canvas.getContext('2d', { desynchronized: true})!;
-      ctx.strokeStyle = '#000000';
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
+      const ctx = canvas.getContext("2d", { desynchronized: true })!;
+      ctx.strokeStyle = "#000000";
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
       if (stroke.length < 3) {
         const it = stroke.at(i)!;
         ctx.lineWidth = it.pressure * 2;
@@ -74,7 +78,7 @@ export function Scratchpad({cardCount}:{cardCount: number}): React.ReactNode {
     };
 
     const onCanvasPointerMove = (e) => {
-      e.stopPropagation()
+      e.stopPropagation();
       if (e.pressure === 0) {
         stroke.length = 0;
         return;
@@ -87,7 +91,11 @@ export function Scratchpad({cardCount}:{cardCount: number}): React.ReactNode {
         canvas.width = w;
         canvas.height = h;
       }
-      const point: Point = { x: e.offsetX, y: e.offsetY, pressure: e.pressure} as Point;
+      const point: Point = {
+        x: e.offsetX,
+        y: e.offsetY,
+        pressure: e.pressure,
+      } as Point;
       stroke.push(point);
       drawOnCanvas();
     };
@@ -96,19 +104,19 @@ export function Scratchpad({cardCount}:{cardCount: number}): React.ReactNode {
       stroke.length = 0;
     };
 
-    canvas.addEventListener('pointermove', onCanvasPointerMove);
-    canvas.addEventListener('pointerleave', clearStroke);
+    canvas.addEventListener("pointermove", onCanvasPointerMove);
+    canvas.addEventListener("pointerleave", clearStroke);
 
     return () => {
-      canvas.removeEventListener('pointermove', onCanvasPointerMove);
-      canvas.removeEventListener('pointerleave', clearStroke);
+      canvas.removeEventListener("pointermove", onCanvasPointerMove);
+      canvas.removeEventListener("pointerleave", clearStroke);
     };
   });
 
   const clearCanvas = () => {
     const canvas = canvasRef.current;
     if (canvas !== null) {
-      canvas.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
     }
   };
 
@@ -127,13 +135,16 @@ export function Scratchpad({cardCount}:{cardCount: number}): React.ReactNode {
 
   return (
     <div id="scratchpad-root">
-      <button onClick={clearCanvas} id="scratchpad-clear">⌫ Clear</button>
+      <button onClick={clearCanvas} id="scratchpad-clear">
+        ⌫ Clear
+      </button>
       <div id="scratchpad-autoclear-container">
         <input
           type="checkbox"
           id="scratchpad-autoclear"
           checked={autoclear}
-          onChange={toggleAutoclear} />
+          onChange={toggleAutoclear}
+        />
         <label htmlFor="scratchpad-autoclear">Clear when changing cards</label>
       </div>
       <div ref={containerRef} id="scratchpad-canvas-container">

@@ -1,91 +1,28 @@
-# VOWELS
-a,あ,ア
-i,い,イ
-u,う,ウ
-e,え,エ
-o,お,オ
-# K-LINE
-ka,か,カ
-ki,き,キ
-ku,く,ク
-ke,け,ケ
-ko,こ,コ
-# S-LINE
-sa,さ,サ
-shi,し,シ
-su,す,ス
-se,せ,セ
-so,そ,ソ
-# T-LINE
-ta,た,タ
-chi,ち,チ
-tsu,つ,ツ
-te,て,テ
-to,と,ト
-# N-LINE
-na,な,ナ
-ni,に,ニ
-nu,ぬ,ヌ
-ne,ね,ネ
-no,の,ノ
-# H-LINE
-ha,は,ハ
-hi,ひ,ヒ
-fu,ふ,フ
-he,へ,ヘ
-ho,ほ,ホ
-# M-LINE
-ma,ま,マ
-mi,み,ミ
-mu,む,ム
-me,め,メ
-mo,も,モ
-# Y-LINE
-ya,や,ヤ
-yu,ゆ,ユ
-yo,よ,ヨ
-# R-LINE
-ra,ら,ラ
-ri,り,リ
-ru,る,ル
-re,れ,レ
-ro,ろ,ロ
-# W-LINE
-wa,わ,ワ
-o(wo),を,ヲ
-# N
-n,ん,ン
-# G-LINE
 ga,が,ガ
 gi,ぎ,ギ
 gu,ぐ,グ
 ge,げ,ゲ
 go,ご,ゴ
-# Z-LINE
 za,ざ,ザ
 ji,じ,ジ
 zu,ず,ズ
 ze,ぜ,ゼ
 zo,ぞ,ゾ
-# D-LINE
 da,だ,ダ
 ji(di),ぢ,ヂ
 zu(du),づ,ヅ
 de,で,デ
 do,ど,ド
-# B-LINE
 ba,ば,バ
 bi,び,ビ
 bu,ぶ,ブ
 be,べ,ベ
 bo,ぼ,ボ
-# P-LINE
 pa,ぱ,パ
 pi,ぴ,ピ
 pu,ぷ,プ
 pe,ぺ,ペ
 po,ぽ,ポ
-# DIGRAPHS
 kya,きゃ,キャ
 kyu,きゅ,キュ
 kyo,きょ,キョ

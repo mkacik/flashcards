@@ -8,8 +8,8 @@ const getRandomInt = (max: number): number => {
 };
 
 const coinToss = (): boolean => {
-  return (getRandomInt(2) == 0);
-}
+  return getRandomInt(2) == 0;
+};
 
 function getFrontSide(settings: PersistentSettings): FrontSide {
   const frontSide = settings.frontSide;
@@ -21,9 +21,13 @@ function getFrontSide(settings: PersistentSettings): FrontSide {
 }
 
 function wrap(...args: string[]) {
-  return <>
-    {args.map((item, index) => <div key={index}>{item}</div>)}
-  </>;
+  return (
+    <>
+      {args.map((item, index) => (
+        <div key={index}>{item}</div>
+      ))}
+    </>
+  );
 }
 
 // Deck card has 3 sides - en, hiragana & katakana. In practice session context, card should only
@@ -39,7 +43,8 @@ function pickCard(deck: Deck, settings: PersistentSettings): FlashCard {
   const deckCard = deck[randomIndex];
 
   const english = deckCard.english;
-  const kana = (settings.kana == Kana.HIRAGANA) ? deckCard.hiragana : deckCard.katakana;
+  const kana =
+    settings.kana == Kana.HIRAGANA ? deckCard.hiragana : deckCard.katakana;
 
   if (getFrontSide(settings) === FrontSide.KANA) {
     return {
@@ -54,10 +59,15 @@ function pickCard(deck: Deck, settings: PersistentSettings): FlashCard {
   } as FlashCard;
 }
 
-export function PracticeSession(
-  { deck, settings, bumpCardCount }:
-  { deck: Deck, settings: PersistentSettings, bumpCardCount: () => void },
-): React.ReactNode {
+export function PracticeSession({
+  deck,
+  settings,
+  bumpCardCount,
+}: {
+  deck: Deck;
+  settings: PersistentSettings;
+  bumpCardCount: () => void;
+}): React.ReactNode {
   const [card, setCard] = useState<FlashCard>(pickCard(deck, settings));
   const [flipped, setFlipped] = useState<boolean>(false);
 
