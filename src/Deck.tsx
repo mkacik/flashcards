@@ -2,6 +2,8 @@ export type Card = {
   english: string;
   hiragana: string;
   katakana: string;
+  altHiragana: string | null;
+  altKatakana: string | null;
 };
 
 export type Deck = Array<Card>;
@@ -15,16 +17,22 @@ export function parseDeck(deck: string): Deck {
       continue;
     }
 
-    const sides = row.split(",");
-    if (sides.length === 3) {
-      const card: Card = {
-        english: sides[0],
-        hiragana: sides[1],
-        katakana: sides[2],
-      } as Card;
+    const [
+      english,
+      hiragana,
+      katakana,
+      altHiragana,
+      altKatakana
+    ] = row.split(",");
+    const card: Card = {
+      english: english,
+      hiragana: hiragana,
+      katakana: katakana,
+      altHiragana: altHiragana,
+      altKatakana: altKatakana,
+    } as Card;
 
-      cards.push(card);
-    }
+    cards.push(card);
   }
 
   return cards;

@@ -43,19 +43,21 @@ function pickCard(deck: Deck, settings: PersistentSettings): FlashCard {
   const deckCard = deck[randomIndex];
 
   const english = deckCard.english;
-  const kana =
+  let kana =
     settings.kana == Kana.HIRAGANA ? deckCard.hiragana : deckCard.katakana;
 
   if (getFrontSide(settings) === FrontSide.KANA) {
     return {
       front: wrap(kana),
-      back: wrap(english),
+      back: wrap(kana, english),
     } as FlashCard;
   }
 
+  const altKana = Kana.HIRAGANA ? deckCard.altHiragana : deckCard.altKatakana;
+  const hasAltKana = (altKana !== null) && (altKana !== undefined);
   return {
     front: wrap(english),
-    back: wrap(kana),
+    back: hasAltKana ? wrap(kana, altKana, english) : wrap(kana, english),
   } as FlashCard;
 }
 
